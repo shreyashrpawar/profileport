@@ -8,7 +8,6 @@ const Create = () => {
   const admin = user.email;
   const [step, setStep] = useState(1);
   const [sitename, setsitename] = useState("");
-  const [logo, setlogo] = useState("");
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [address, setaddress] = useState("");
@@ -125,7 +124,7 @@ const Create = () => {
           <div className="text-center">
             <h2 className="text-4xl font-bold mb-4">Review & edit your info</h2>
             <form className="w-full max-w-md mx-auto">
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="logo"
@@ -138,7 +137,7 @@ const Create = () => {
                   id="logo"
                   name="logo"
                 />
-              </div>
+              </div> */}
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"

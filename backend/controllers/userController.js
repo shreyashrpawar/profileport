@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const detailUser = require("../models/userDetails");
+const hostdetailmodule = require("../models/hostdetails");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
@@ -9,7 +10,7 @@ const hostdetails = async (req, res) => {
   const { admin, sitename, host } = req.body;
 
   try {
-    const user = await detailUser.hostit(admin, sitename, host);
+    const user = await hostdetailmodule.hostit(admin, sitename, host);
 
     // create a token
     const token = createToken(user._id);
@@ -28,8 +29,21 @@ const gethostingdata = async (req, res) => {
     console.log(user);
     // create a token
     const token = createToken(user._id);
+    res.status(200).json({ message: user });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-    res.status(200).json({ user, token });
+const gethosting = async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+  try {
+    const user = await hostdetailmodule.gethosts(email);
+    console.log(user);
+    // create a token
+    const token = createToken(user._id);
+    res.status(200).json({ message: user });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -49,7 +63,54 @@ const detailsUser = async (req, res) => {
       phone,
       selectedTheme
     );
+    console.log(user);
+    // create a token
+    const token = createToken(user._id);
 
+    res.status(200).json({ email, token });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const updateData = async (req, res) => {
+  const {
+    siteid,
+    name,
+    email,
+    address,
+    phone,
+    proftitle,
+    bio,
+    skill1,
+    skill2,
+    skill1info,
+    skill2info,
+    project1title,
+    project2title,
+    project1description,
+    project2description,
+  } = req.body;
+
+  try {
+    const user = await detailUser.updateData(
+      siteid,
+      name,
+      email,
+      address,
+      phone,
+      proftitle,
+      bio,
+      skill1,
+      skill2,
+      skill1info,
+      skill2info,
+      project1title,
+      project2title,
+      project1description,
+      project2description
+    );
+    console.log(user);
     // create a token
     const token = createToken(user._id);
 
@@ -97,4 +158,6 @@ module.exports = {
   detailsUser,
   hostdetails,
   gethostingdata,
+  updateData,
+  gethosting,
 };
