@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from 'axios';
+
 
 function Hosted() {
   const { siteid } = useParams();
 
-  const [text, setText] = useState("Your Name");
   const [isEditing, setIsEditing] = useState(false);
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
@@ -75,6 +76,23 @@ function Hosted() {
     setIsEditing(false);
   };
 
+  const generatePDF = async () => {
+    try {
+      // Replace with your API endpoint
+      const response = await axios.post('/api/user/generatepdf', { userId: siteid });
+
+      // Trigger the PDF download
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'resume.pdf';
+      a.click();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const user = JSON.parse(localStorage.getItem("user"));
   const [data, setdata] = useState("");
   const [sitename, setsitename] = useState("");
@@ -116,33 +134,7 @@ function Hosted() {
     const formData = {
       siteid,
     };
-    // function setit(d) {
-    //   return (
-    //     <>
-    //       if(d.message.proftitle)
-    //       {setproftitle(d.message.proftitle)}
-    //       if(d.message.bio){setbio(d.message.bio)}
-    //       if(d.message.skill1){setskill1(d.message.skill1)}
-    //       if(d.message.skill2){setskill2(d.message.skill2)}
-    //       if(d.message.skill1info){setskill1info(d.message.skill1info)}
-    //       if(d.message.skill2info){setskill2info(d.message.skill2info)}
-    //       if(d.message.project1title){setproject1title(d.message.project1title)}
-    //       if(d.message.project2title){setproject2title(d.message.project2title)}
-    //       if(d.message.project1description)
-    //       {setproject1description(d.message.project1description)}
-    //       if(d.message.project2description)
-    //       {setproject2description(d.message.project2description)}
-    //       if(d.message.sitename){setsitename(d.message.sitename)}
-    //       if(d.message.name){setname(d.message.name)}
-    //       if(d.message.email){setemail(d.message.email)}
-    //       if(d.message.address){setaddress(d.message.address)}
-    //       if(d.message.phone){setphone(d.message.phone)}
-    //       {/* setsitename(d.message.sitename), setname(d.message.name),
-    //       setemail(d.message.email), setaddress(d.message.address),
-    //       setphone(d.message.phone) */}
-    //     </>
-    //   );
-    // }
+
     fetch(url, {
       method: "POST",
       headers: {
@@ -152,10 +144,9 @@ function Hosted() {
     })
       .then((res) => res.json())
       .then((d) => {
+        if(d.message){
         if (d.message.proftitle) {
-          console.log(
-            d.message.proftitle
-          ); /* {setproftitle(d.message.proftitle)} */
+          setproftitle(d.message.proftitle);
         }
         if (d.message.bio) {
           setbio(d.message.bio);
@@ -198,32 +189,10 @@ function Hosted() {
         }
         if (d.message.phone) {
           setphone(d.message.phone);
-        }
-        {
-          /* setsitename(d.message.sitename), setname(d.message.name),
-            setemail(d.message.email), setaddress(d.message.address),
-            setphone(d.message.phone) */
-        }
+        }}
+        
       });
   };
-
-  //   const response = await fetch("/api/user/gethostingdata", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${user.token}`,
-  //     },
-  //     body: JSON.stringify(formData),
-  //   });
-  //   if (response.ok) {
-  //     console.log(response.message);
-  //   } else {
-  //     // Handle errors (e.g., show an error message)
-  //     console.error("Form data submission failed");
-  //   }
-  // } catch (error) {
-  //   console.error("Error:", error);
-  // }
 
   useEffect(() => {
     fetchInfo();
@@ -243,6 +212,12 @@ function Hosted() {
                 }}
               >
                 Save
+              </button>
+              <button
+                className="bg-indigo-600 text-white text-sm font-semibold focus:outline-none hover:bg-indigo-700 px-4 py-2 rounded-md"
+                onClick={generatePDF}
+              >
+                Generate
               </button>
             </div>
           )}

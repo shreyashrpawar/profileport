@@ -25,6 +25,36 @@ const Create = () => {
   const prevStep = () => {
     setStep(step - 1);
   };
+  function validateForm() {
+    // Check if the First Name is an Empty string or not.
+
+    if (name.length == 0) {
+      alert("Invalid Form, First Name can not be empty");
+      return;
+    }
+
+    // Check if the Email is an Empty string or not.
+
+    if (email.length == 0) {
+      alert("Invalid Form, Email Address can not be empty");
+      return;
+    }
+
+    if (!address.trim()) {
+      alert("Address is required.");
+      return;
+    }
+    if (!phone.trim()) {
+      alert("Phone number is required.");
+      return;
+    } else if (!/^\d{10}$/.test(phone)) {
+      alert("Phone number must be 10 digits.");
+      return;
+    }
+
+    // if all the conditions are valid, this means that the form is valid
+    setStep(step + 1);
+  }
 
   const submitForm = async () => {
     try {
@@ -207,7 +237,7 @@ const Create = () => {
                 Back
               </button>
               <button
-                onClick={nextStep}
+                onClick={validateForm}
                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
               >
                 Next
@@ -238,22 +268,6 @@ const Create = () => {
                 onClick={() => handleThemeSelect("dark")}
               >
                 Dark
-              </div>
-              <div
-                className={`w-16 h-16 border border-gray-400 rounded cursor-pointer ${
-                  selectedTheme === "basil" ? "bg-blue-200" : ""
-                }`}
-                onClick={() => handleThemeSelect("basil")}
-              >
-                Basil
-              </div>
-              <div
-                className={`w-16 h-16 border border-gray-400 rounded cursor-pointer ${
-                  selectedTheme === "fresh" ? "bg-blue-200" : ""
-                }`}
-                onClick={() => handleThemeSelect("fresh")}
-              >
-                Fresh
               </div>
             </div>
             <button

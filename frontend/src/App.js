@@ -34,7 +34,7 @@ function App() {
               path="/create"
               element={user ? <Create /> : <Navigate to="/login" />}
             />
-            <Route path="/create/:siteid" element={<Hosted />} />
+            <Route path="/:siteid" element={<Hosted />} />
           </Routes>
         </div>
       </BrowserRouter>

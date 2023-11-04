@@ -23,7 +23,13 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((d) => {
-        setSites(d.message.sitename);
+        console.log(d);
+        if(!d.message){
+          setSites("No Sites");
+        }
+        else{
+          setSites(d.message.sitename);
+        }
       });
   };
 
@@ -43,16 +49,18 @@ const Home = () => {
       <button className="bg-blue-500 text-white rounded px-4 py-2 mt-4">
         <Link to="/create">Create Site</Link>
       </button>
-      <Link to={"/create/" + sites}>
-        <div className="mt-8 w-64 h-64 border border-gray-300 p-4 rounded-lg bg-slate-200 text-center">
-          {/* {sites.map((site) => (
-          <div key={site.id} className="border-b border-gray-300 py-2">
-            {site.name}
+      {sites && (
+        <Link to={"/" + sites}>
+          <div className="mt-8 w-64 h-64 border border-gray-300 p-4 rounded-lg bg-slate-200 text-center">
+            {/* {sites.map((site) => (
+              <div key={site.id} className="border-b border-gray-300 py-2">
+                {site.name}
+              </div>
+            ))} */}
+            {sites}
           </div>
-        ))} */}
-          {sites}
-        </div>
-      </Link>
+        </Link>
+      )}
     </div>
   );
 };

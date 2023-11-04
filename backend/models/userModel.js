@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
-
+const axios = require("axios");
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
@@ -12,9 +12,12 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: false
   }
 })
+
+// 
+
 
 // static signup method
 userSchema.statics.signup = async function(email, password) {
@@ -45,7 +48,7 @@ userSchema.statics.signup = async function(email, password) {
 }
 
 // static login method
-userSchema.statics.login = async function(email, password) {
+userSchema.statics.login = async function(email, password, throughGoogle) {
 
   if (!email || !password) {
     throw Error('All fields must be filled')
@@ -55,13 +58,21 @@ userSchema.statics.login = async function(email, password) {
   if (!user) {
     throw Error('Incorrect email')
   }
-
+if(!throughGoogle){
   const match = await bcrypt.compare(password, user.password)
   if (!match) {
     throw Error('Incorrect password')
   }
-
   return user
+}else{
+  if(user.password!=password){
+    throw Error('Incorrect password')
+  }else{
+    return user
+        
+  }
+}
+  
 }
 
 module.exports = mongoose.model('User', userSchema)
